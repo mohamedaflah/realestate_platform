@@ -67,6 +67,12 @@
     @apply w-[93%] mx-auto;
   }
   .main {
-    @apply w-[93%] md:w-[90%] h-full ;
+    @apply w-[93%] md:w-[90%] h-full;
+  }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .otp {
+    @apply border dark:border-border rounded-xl font-semibold text-3xl size-24;
   }
 }
