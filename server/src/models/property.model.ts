@@ -31,6 +31,7 @@ const propertyModel = new mongoose.Schema(
     totalFloor: Number,
     userId: mongoose.Types.ObjectId,
     images: [String],
+    status: Boolean,
   },
   { timestamps: true }
 );
