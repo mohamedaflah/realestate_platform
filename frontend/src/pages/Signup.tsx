@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { LoaderButton } from "@/components/app/loader-button";
 import { PhoneInput } from "@/components/app/phone-input";
 
@@ -14,11 +15,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signupSchema } from "@/utils/schemas/signup.schema";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "@/config/firebase.config";
+import { useFullContext } from "@/context/statecontext";
 export const Signup = () => {
   const [otp, setOtp] = useState<boolean>(true);
-  //   otp;
+  otp;
   const [searchParam, setSearchParam] = useSearchParams();
-  console.log(setSearchParam);
+  setSearchParam;
 
   useEffect(() => {
     const param = searchParam.get("current");
@@ -34,22 +38,40 @@ export const Signup = () => {
     formState: { errors },
     handleSubmit,
     setValue,
+    getValues,
   } = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      
       username: "",
       password: "",
     },
   });
-  const handleSignupSubmition = (values: z.infer<typeof signupSchema>) => {
-    console.log(values);
+  const [otpSentTime, setOtpSentTime] = useState<number | null>(null);
+  const { setVerificationCheck, verificationCheck } = useFullContext();
+  otpSentTime;
+  setOtpSentTime;
+  const handleSignupSubmition = async (
+    values: z.infer<typeof signupSchema>
+  ) => {
+    try {
+      console.log(values);
+      const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+      const confirmationresult = await signInWithPhoneNumber(
+        auth,
+        getValues("phoneNumber"),
+        recaptcha
+      );
+
+      setVerificationCheck(confirmationresult);
+    } catch (error) {
+      console.log(`firebase err ${error}`);
+    }
   };
   return (
     <main className="w-full h-screen flex-center overflow-hidden">
-      {otp ? (
+      {verificationCheck ? (
         <>
           <div className="rounded-lg border w-[90%] sm:w-[60%] md:w-[41%] lg:w-[32%] shadow-md p-10">
             <div className="w-full flex-center">
@@ -167,6 +189,9 @@ export const Signup = () => {
                 <span className="text-red-600 text-[13px]">
                   {errors && errors.email && errors.email.message}
                 </span>
+              </div>
+              <div className="w-full">
+                <div id="recaptcha"></div>
               </div>
               <div className="flex flex-col gap-2 ">
                 <LoaderButton type="submit">Create account</LoaderButton>
