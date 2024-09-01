@@ -10,6 +10,8 @@ export const loginUserController = async (
 ) => {
   try {
     const { phoneNumber, password } = req.body;
+    console.log(req.body);
+
     const userExist = await userModel.findOne({ phoneNumber: phoneNumber });
     if (!userExist) {
       return res.status(400).json({ status: false, message: "User not found" });
@@ -20,7 +22,7 @@ export const loginUserController = async (
         .status(400)
         .json({ status: false, message: "User not found🤔" });
     }
-    const token = generateJWT(userExist._id);
+    const token = generateJWT({ id: userExist._id });
     res
       .cookie("token", token, cookieOptions)
       .status(200)

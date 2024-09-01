@@ -6,12 +6,14 @@ import { BrowserRouter } from "react-router-dom";
 import { FullContextProvider } from "./context/statecontext.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <FullContextProvider>
         <Provider store={store}>
+          <Toaster position="top-center" />
           <App />
         </Provider>
       </FullContextProvider>

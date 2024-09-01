@@ -1,5 +1,5 @@
 export const propertyType = ["residential", "commercial", "land", "luxury"];
-export const sellTypes = ["Rent", "Lease", "Buy"];
+export const sellTypes = ["rent", "lease", "buy"];
 export const propertyItem = {
   residential: [
     "Apartments",

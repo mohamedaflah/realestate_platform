@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { LoaderButton } from "@/components/app/loader-button";
 import { PhoneInput } from "@/components/app/phone-input";
@@ -23,8 +25,13 @@ import {
   setConfirmationResult,
   setUserLocally,
 } from "@/redux/reducers/user.reducer";
+import { userSignup } from "@/redux/actions/user.action";
+import { IUser } from "@/types/user.types";
+import toast from "react-hot-toast";
+import { firebaseOtpErrorMessages } from "@/constants/error";
 
 export const Signup = () => {
+  const { loading, user } = useAppSelector((state) => state.user);
   const [otp, setOtp] = useState<boolean>(true);
   otp;
   const [searchParam, setSearchParam] = useSearchParams();
@@ -77,6 +84,19 @@ export const Signup = () => {
       console.log(`firebase err ${error}`);
     }
   };
+  const [otpcode, setOtpcode] = useState<string>("");
+  const verifyOtp = async () => {
+    try {
+      await verificationCheck?.confirm(otpcode ? otpcode : "");
+      dispatch(userSignup(user as IUser));
+    } catch (error: any) {
+      const errorMessage =
+        firebaseOtpErrorMessages[
+          error.code as keyof typeof firebaseOtpErrorMessages
+        ] || firebaseOtpErrorMessages["default"];
+      toast.error(errorMessage);
+    }
+  };
   return (
     <main className="w-full h-screen flex-center overflow-hidden">
       {verificationCheck ? (
@@ -87,7 +107,7 @@ export const Signup = () => {
             </div>
             <div className="w-full flex flex-col mt-10 gap-3">
               <div className="w-full flex justify-center ">
-                <InputOTP maxLength={6}>
+                <InputOTP maxLength={6} onChange={(value) => setOtpcode(value)}>
                   <InputOTPGroup className="flex gap-4">
                     <InputOTPSlot className="otp size-12" index={0} />
                     <InputOTPSlot className="otp size-12" index={1} />
@@ -99,7 +119,11 @@ export const Signup = () => {
                 </InputOTP>
               </div>
               <div className="flex flex-col gap-2 ">
-                <LoaderButton loading={false} type="button">
+                <LoaderButton
+                  onClick={() => verifyOtp()}
+                  loading={loading}
+                  type="button"
+                >
                   <span>Verify OTP</span>
                 </LoaderButton>
                 {/* <div className="w-full flex justify-end">
@@ -202,7 +226,9 @@ export const Signup = () => {
                 <div id="recaptcha"></div>
               </div>
               <div className="flex flex-col gap-2 ">
-                <LoaderButton type="submit">Create account</LoaderButton>
+                <LoaderButton type="submit" loading={loading}>
+                  Create account
+                </LoaderButton>
                 <div className="w-full flex justify-end">
                   <span className="text-sm">
                     Already have an account{" "}

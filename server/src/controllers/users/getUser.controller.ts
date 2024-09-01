@@ -8,6 +8,11 @@ export const getUserController = async (
 ) => {
   try {
     const token = req.cookies.token;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ status: false, message: "token not found" });
+    }
     const decode = jwt.verify(token, "secret");
     const { id } = decode as { id: string };
     const user = await userModel.findOne({ _id: id });

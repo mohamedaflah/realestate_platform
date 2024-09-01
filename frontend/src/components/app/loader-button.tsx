@@ -7,14 +7,19 @@ type loaderButtonProp = {
   children: ReactNode;
   type?: "submit" | "button";
   loading?: boolean;
+  onClick?: () => void;
 };
 export const LoaderButton = ({
   children,
   type = "button",
   loading = false,
+  onClick,
+  ...prop
 }: loaderButtonProp) => {
   return (
     <Button
+      {...prop}
+      onClick={onClick}
       type={type}
       className={cn(
         "w-full h-12 bg-colors-forground flex-center gap-2 hover:bg-colors-forground ",
