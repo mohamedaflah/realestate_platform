@@ -10,9 +10,17 @@ const initialState: IUserInitial = {
 
 const userReducer = createSlice({
   initialState,
-  reducers: {},
+  reducers: {
+    setConfirmationResult: (state, { payload }) => {
+      state.verificationCheck = payload;
+    },
+    setUserLocally: (state, { payload }) => {
+      state.user = payload;
+    },
+  },
   name: "userReducer",
   //   extraReducers: {},
 });
 
 export default userReducer.reducer;
+export const { setConfirmationResult,setUserLocally } = userReducer.actions;

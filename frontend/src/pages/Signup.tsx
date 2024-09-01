@@ -17,7 +17,13 @@ import { z } from "zod";
 import { signupSchema } from "@/utils/schemas/signup.schema";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "@/config/firebase.config";
-import { useFullContext } from "@/context/statecontext";
+
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import {
+  setConfirmationResult,
+  setUserLocally,
+} from "@/redux/reducers/user.reducer";
+
 export const Signup = () => {
   const [otp, setOtp] = useState<boolean>(true);
   otp;
@@ -49,9 +55,10 @@ export const Signup = () => {
     },
   });
   const [otpSentTime, setOtpSentTime] = useState<number | null>(null);
-  const { setVerificationCheck, verificationCheck } = useFullContext();
+  const { verificationCheck } = useAppSelector((state) => state.user);
   otpSentTime;
   setOtpSentTime;
+  const dispatch = useAppDispatch();
   const handleSignupSubmition = async (
     values: z.infer<typeof signupSchema>
   ) => {
@@ -64,7 +71,8 @@ export const Signup = () => {
         recaptcha
       );
 
-      setVerificationCheck(confirmationresult);
+      dispatch(setConfirmationResult(confirmationresult));
+      dispatch(setUserLocally(values));
     } catch (error) {
       console.log(`firebase err ${error}`);
     }
