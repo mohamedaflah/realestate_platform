@@ -44,7 +44,6 @@ export const AddProperty = () => {
   });
   const handlepropertyAdd = (values: z.infer<typeof propertySchema>) => {
     console.log(values);
-    ;
   };
 
   const [aminity, setAminity] = useState<string>("");

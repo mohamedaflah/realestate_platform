@@ -1,3 +1,5 @@
+import { IUser } from "./user.types";
+
 export interface IProperty {
   _id?: string;
   title: string;
@@ -17,10 +19,17 @@ export interface IProperty {
   founded?: number;
   totalFloor?: number;
   userId: string;
-  images?: string[];
+  images?: string | File[];
   status?: "publish" | "unpublish";
   featuresAndAminity: string[];
   otherProperty: string[];
   createdAt?: Date;
   updatedAt?: Date;
+  user?: IUser;
+}
+export interface PropertyInitial {
+  loading: boolean;
+  properties: IProperty[] | null;
+  property: IProperty | null;
+  error: string | boolean;
 }
