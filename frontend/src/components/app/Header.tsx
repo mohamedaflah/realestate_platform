@@ -32,7 +32,12 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Button variant={"outline"}>My posts</Button>
+              <Button
+                variant={"outline"}
+                onClick={() => isVerified && navigate("/myproperties")}
+              >
+                My posts
+              </Button>
               <Button
                 className="bg-colors-forground hover:bg-colors-forground"
                 onClick={() => dispatch(logoutUser())}

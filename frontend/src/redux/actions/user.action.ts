@@ -53,3 +53,18 @@ export const logoutUser = createAsyncThunk(
     }
   }
 );
+
+export const validateUser = createAsyncThunk(
+  "user/validate",
+  async (
+    sendPayload: { email: string; phoneNumber: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await axiosInstance.post("/user/validate", sendPayload);
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);

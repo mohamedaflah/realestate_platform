@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./redux/store";
 import { getUser } from "./redux/actions/user.action";
 import { AddProperty } from "./pages/addProperty";
+import { PropertyDetail } from "./pages/propertyDetail";
+import { MyPosts } from "./pages/MyPosts";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -29,6 +31,8 @@ function App() {
           element={isVerified ? <Navigate to={"/"} /> : <Login />}
         />
         <Route path="/add-property" element={<AddProperty />} />
+        <Route path="/property/:propertyId" element={<PropertyDetail />} />
+        <Route path="/myproperties" element={<MyPosts/>}/>
       </Routes>
     </main>
   );

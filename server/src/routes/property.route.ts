@@ -3,6 +3,8 @@ import { addPropertyController } from "../controllers/property/addproperty.contr
 import { deletePropertyController } from "../controllers/property/deleteproperty";
 import { updatePropertyController } from "../controllers/property/updateProperty";
 import { getAllProperties } from "../controllers/property/getAllproperties";
+import { getPropertiesWithUser } from "../controllers/property/getpropertywithuser";
+import { getPropertyWithId } from "../controllers/property/getpropertywithId";
 
 const propertyRoute = Router();
 
@@ -12,5 +14,6 @@ propertyRoute
   .delete(deletePropertyController)
   .put(updatePropertyController)
   .get(getAllProperties);
-
+propertyRoute.get(`/withuser`, getPropertiesWithUser);
+propertyRoute.get(`/:propertyId`, getPropertyWithId);
 export default propertyRoute;

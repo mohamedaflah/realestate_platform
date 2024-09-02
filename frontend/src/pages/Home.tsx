@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
-
+import { getAllProperties } from "@/redux/actions/propertyAction";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { HandCoins, Heart, MapPin, MoveRight } from "lucide-react";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-
+  const navigate = useNavigate();
+  const { isVerified, user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getAllProperties({ userId: user?._id ? user?._id : "" }));
+  }, [dispatch, user?._id]);
+  const { properties } = useAppSelector((state) => state.property);
   return (
     <main className="w-full h-screen bg-[url(/images/Base.png)] bg-cover bg-center pt-20 flex items-end flex-col">
       <section className="main grid grid-cols-1 lg:grid-cols-2 ">
@@ -45,7 +55,17 @@ const Home = () => {
                   <h1 className="font-semibold ">Select Move-in Date</h1>
                 </div>
                 <div className="w-full h-full flex flex-col">
-                  <Button className="h-full bg-colors-forground">
+                  <Button
+                    className="h-full bg-colors-forground"
+                    onClick={() => {
+                      if (isVerified) {
+                        navigate("/add-property");
+                      } else {
+                        toast.error("Please login or register account");
+                        navigate("/login");
+                      }
+                    }}
+                  >
                     Sell Property
                   </Button>
                 </div>
@@ -96,7 +116,17 @@ const Home = () => {
         </section>
       </section>
       <div className="main  h-28 flex-center  mt-3 py-10">
-        <Button className="h-12 bg-colors-forground hover:bg-colors-forground">
+        <Button
+          onClick={() => {
+            if (isVerified) {
+              navigate("/add-property");
+            } else {
+              toast.error("Please login or register account");
+              navigate("/login");
+            }
+          }}
+          className="h-12 bg-colors-forground hover:bg-colors-forground"
+        >
           Sell properties
         </Button>
       </div>
@@ -128,111 +158,67 @@ const Home = () => {
             </div>
           </div>
           <section className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-4">
-            <div className="w-full h-96 flex flex-col rounded-lg border overflow-hidden border-[#F0EFFB]">
-              <div>
-                <img
-                  src={"/images/abc.png"}
-                  className="h-56 object-cover w-full"
-                  alt=""
-                />
+            {properties?.map((property, Id) => (
+              <div
+                key={String(property?._id + "" + Id)}
+                className="w-full min-h-96 flex flex-col rounded-lg cursor-pointer border overflow-hidden border-[#F0EFFB]"
+              >
+                <div>
+                  <img
+                    src={String(property?.images?.[0])}
+                    className="h-56 object-cover w-full"
+                    alt=""
+                  />
+                </div>
+                <div className="w-full h-full p-4">
+                  <div className="w-full flex justify-between">
+                    <div className="flex items-center gap-1 ">
+                      <h2 className="font-bold text-colors-forground text-2xl">
+                        ₹{property?.price}
+                      </h2>
+                      <span className="text-colors-text text-sm"></span>
+                    </div>
+                    <div className="size-10 border rounded-full flex-center text-colors-forground shadow-sm">
+                      <Heart />
+                    </div>
+                  </div>
+                  <div className="w-full flex justify-between">
+                    <div className="flex items-center gap-1 ">
+                      <h1 className="font-semibold text-2xl">
+                        {property.title}
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="w-full flex justify-between">
+                    <div className="flex items-center gap-1 line-clamp-1">
+                      <h4 className="text-colors-text line-clamp-1">
+                        {property.description}
+                      </h4>
+                    </div>
+                  </div>
+                  <div className="border-t mt-3 pt-2 flex gap-3 justify-between">
+                    <div className="flex capitalize font-semibold gap-1 items-center">
+                      <HandCoins className="w-5" />
+                      {property.listingType}
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <MapPin className="w-5" />
+                      <span>
+                        {property.address?.city},{property.address?.state},
+                        {property.address?.country}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3 w-full" onClick={()=>{
+                    navigate(`/property/${String(property?._id)}`)
+                  }}>
+                    <Button className="h-10 w-full bg-colors-forground gap-2">
+                      Go to Details <MoveRight />
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="w-full h-full p-4">
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h2 className="font-bold text-colors-forground text-2xl">
-                      ₹2,095
-                    </h2>
-                    <span className="text-colors-text text-sm">/month</span>
-                  </div>
-                  <div className="size-10 border rounded-full flex-center text-colors-forground shadow-sm">
-                    <Heart />
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h1 className="font-semibold text-2xl">Palm harbour</h1>
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h4 className="text-colors-text">
-                      2699 Green Valley, Highland Lake, FL
-                    </h4>
-                  </div>
-                </div>
-                <div className="border-t mt-3">Bed</div>
-              </div>
-            </div>
-            <div className="w-full h-96 flex flex-col rounded-lg border overflow-hidden border-[#F0EFFB]">
-              <div>
-                <img
-                  src={"/images/abc.png"}
-                  className="h-56 object-cover"
-                  alt=""
-                />
-              </div>
-              <div className="w-full h-full p-4">
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h2 className="font-bold text-colors-forground text-2xl">
-                      ₹2,095
-                    </h2>
-                    <span className="text-colors-text text-sm">/month</span>
-                  </div>
-                  <div className="size-10 border rounded-full flex-center text-colors-forground shadow-sm">
-                    <Heart />
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h1 className="font-semibold text-2xl">Palm harbour</h1>
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h4 className="text-colors-text">
-                      2699 Green Valley, Highland Lake, FL
-                    </h4>
-                  </div>
-                </div>
-                <div className="border-t mt-3">Bed</div>
-              </div>
-            </div>
-            <div className="w-full h-96 flex flex-col rounded-lg border overflow-hidden border-[#F0EFFB]">
-              <div>
-                <img
-                  src={"/images/abc.png"}
-                  className="h-56 object-cover"
-                  alt=""
-                />
-              </div>
-              <div className="w-full h-full p-4">
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h2 className="font-bold text-colors-forground text-2xl">
-                      ₹2,095
-                    </h2>
-                    <span className="text-colors-text text-sm">/month</span>
-                  </div>
-                  <div className="size-10 border rounded-full flex-center text-colors-forground shadow-sm">
-                    <Heart />
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h1 className="font-semibold text-2xl">Palm harbour</h1>
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex items-center gap-1 ">
-                    <h4 className="text-colors-text">
-                      2699 Green Valley, Highland Lake, FL
-                    </h4>
-                  </div>
-                </div>
-                <div className="border-t mt-3">Bed</div>
-              </div>
-            </div>
+            ))}
           </section>
         </main>
       </section>

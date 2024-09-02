@@ -5,6 +5,7 @@ import {
   logoutUser,
   userLogin,
   userSignup,
+  validateUser,
 } from "../actions/user.action";
 import toast from "react-hot-toast";
 const initialState: IUserInitial = {
@@ -49,7 +50,7 @@ const userReducer = createSlice({
       .addCase(userLogin.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.user = payload.user;
-        state.isVerified=true
+        state.isVerified = true;
         toast.success("Login success");
       })
       .addCase(userLogin.rejected, (state, { payload }) => {
@@ -76,12 +77,23 @@ const userReducer = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;
         state.user = null;
-        state.isVerified=false
+        state.isVerified = false;
         toast.success("Logout succesfull");
       })
       .addCase(logoutUser.rejected, (state, { payload }) => {
         state.err = String(payload);
         state.loading = false;
+        toast.error(state.err);
+      })
+      .addCase(validateUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(validateUser.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(validateUser.rejected, (state, { payload }) => {
+        state.loading=false
+        state.err = String(payload);
         toast.error(state.err);
       });
   },

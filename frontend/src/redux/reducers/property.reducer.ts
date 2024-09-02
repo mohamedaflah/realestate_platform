@@ -1,6 +1,11 @@
 import { PropertyInitial } from "@/types/property.types";
 import { createSlice } from "@reduxjs/toolkit";
-import { propertyAdd, updateProperty } from "../actions/propertyAction";
+import {
+  getAllProperties,
+  getPropertyWithId,
+  propertyAdd,
+  updateProperty,
+} from "../actions/propertyAction";
 import toast from "react-hot-toast";
 
 const initialState: PropertyInitial = {
@@ -29,6 +34,29 @@ const propertyReducer = createSlice({
       })
       .addCase(updateProperty.pending, (state) => {
         state.loading = true;
+      })
+      .addCase(getAllProperties.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllProperties.fulfilled, (state, { payload }) => {
+        state.properties = payload.properties;
+        state.loading = false;
+      })
+      .addCase(getAllProperties.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = String(payload);
+      })
+      .addCase(getPropertyWithId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getPropertyWithId.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.property = payload.property;
+        state.error = false;
+      })
+      .addCase(getPropertyWithId.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = String(payload);
       });
   },
 });

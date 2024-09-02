@@ -6,7 +6,7 @@ const userModel = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     password: {
       required: true,
@@ -14,7 +14,7 @@ const userModel = new mongoose.Schema(
     },
     email: {
       required: false,
-      unique: true,
+      // unique: true,
       type: String,
     },
   },

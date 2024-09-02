@@ -12,16 +12,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { propertyType, sellTypes } from "@/constants/property-data";
+import { propertyAdd } from "@/redux/actions/propertyAction";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { propertySchema } from "@/utils/schemas/property.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 export const AddProperty = () => {
   const {
     setValue,
+    reset,
     watch,
     formState: { errors },
     trigger,
@@ -42,8 +46,22 @@ export const AddProperty = () => {
       propertyType: "",
     },
   });
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.user);
+  const { loading } = useAppSelector((state) => state.property);
   const handlepropertyAdd = (values: z.infer<typeof propertySchema>) => {
-    console.log(values);
+    if (!user?._id) {
+      return toast.error("Something went wrong please logout and login");
+    }
+    dispatch(propertyAdd({ ...values, userId: String(user?._id) } as any)).then(
+      (res) => {
+        if (res.type.endsWith("fulfilled")) {
+          navigate("/");
+          reset({});
+        }
+      }
+    );
   };
 
   const [aminity, setAminity] = useState<string>("");
@@ -131,10 +149,10 @@ export const AddProperty = () => {
               </div>
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="" className="text-sm">
-                  Property price
+                  Property Amount
                 </label>
                 <Input
-                  placeholder="₹ price"
+                  placeholder="₹ Amount"
                   className="w-full"
                   onChange={(e) => {
                     if (!isNaN(Number(e.target.value))) {
@@ -475,7 +493,9 @@ export const AddProperty = () => {
         </div>
         <div className="mt-3  flex justify-end items-start h-20">
           <div className="w-48">
-            <LoaderButton type="submit">Submit</LoaderButton>
+            <LoaderButton type="submit" loading={loading}>
+              Submit
+            </LoaderButton>
           </div>
         </div>
       </form>

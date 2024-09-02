@@ -34,6 +34,7 @@ const propertyModel = new mongoose.Schema(
     status: {
       type: String,
       enum: ["publish", "unpublish"],
+      default: "publish",
     },
     featuresAndAminity: [String],
     otherProperty: [String],

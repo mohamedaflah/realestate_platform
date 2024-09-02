@@ -25,13 +25,14 @@ import {
   setConfirmationResult,
   setUserLocally,
 } from "@/redux/reducers/user.reducer";
-import { userSignup } from "@/redux/actions/user.action";
+import { userSignup, validateUser } from "@/redux/actions/user.action";
 import { IUser } from "@/types/user.types";
 import toast from "react-hot-toast";
 import { firebaseOtpErrorMessages } from "@/constants/error";
 
 export const Signup = () => {
   const { loading, user } = useAppSelector((state) => state.user);
+  const [localLoad, setLocalLoad] = useState<boolean>(false);
   const [otp, setOtp] = useState<boolean>(true);
   otp;
   const [searchParam, setSearchParam] = useSearchParams();
@@ -70,23 +71,35 @@ export const Signup = () => {
     values: z.infer<typeof signupSchema>
   ) => {
     try {
-      console.log(values);
-      const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
-      const confirmationresult = await signInWithPhoneNumber(
-        auth,
-        getValues("phoneNumber"),
-        recaptcha
-      );
+      setLocalLoad(true);
+      dispatch(
+        validateUser({
+          email: values.email ? values.email : "",
+          phoneNumber: values.phoneNumber,
+        })
+      ).then(async (res) => {
+        if (res.type.endsWith("fulfilled")) {
+          const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+          const confirmationresult = await signInWithPhoneNumber(
+            auth,
+            getValues("phoneNumber"),
+            recaptcha
+          );
 
-      dispatch(setConfirmationResult(confirmationresult));
-      dispatch(setUserLocally(values));
+          dispatch(setConfirmationResult(confirmationresult));
+          dispatch(setUserLocally(values));
+        }
+      });
     } catch (error) {
       console.log(`firebase err ${error}`);
+    } finally {
+      setLocalLoad(false);
     }
   };
   const [otpcode, setOtpcode] = useState<string>("");
   const verifyOtp = async () => {
     try {
+      setLocalLoad(true);
       await verificationCheck?.confirm(otpcode ? otpcode : "");
       dispatch(userSignup(user as IUser));
     } catch (error: any) {
@@ -95,6 +108,8 @@ export const Signup = () => {
           error.code as keyof typeof firebaseOtpErrorMessages
         ] || firebaseOtpErrorMessages["default"];
       toast.error(errorMessage);
+    } finally {
+      setLocalLoad(false);
     }
   };
   return (
@@ -121,7 +136,7 @@ export const Signup = () => {
               <div className="flex flex-col gap-2 ">
                 <LoaderButton
                   onClick={() => verifyOtp()}
-                  loading={loading}
+                  loading={loading || localLoad}
                   type="button"
                 >
                   <span>Verify OTP</span>
@@ -226,7 +241,7 @@ export const Signup = () => {
                 <div id="recaptcha"></div>
               </div>
               <div className="flex flex-col gap-2 ">
-                <LoaderButton type="submit" loading={loading}>
+                <LoaderButton type="submit" loading={loading || localLoad}>
                   Create account
                 </LoaderButton>
                 <div className="w-full flex justify-end">

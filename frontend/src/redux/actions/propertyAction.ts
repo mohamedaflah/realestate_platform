@@ -30,10 +30,10 @@ export const updateProperty = createAsyncThunk(
         (val) => typeof val !== "string"
       );
       sendPayload.images = (sendPayload.images as any[])?.filter(
-          (val) => typeof val == "string"
-      ) as unknown as string | File[] | undefined
+        (val) => typeof val == "string"
+      ) as unknown as string | File[] | undefined;
       const urls = await uploadImages(fileObjects);
-      sendPayload.images = [...sendPayload.images as Array<any>, ...urls] as
+      sendPayload.images = [...(sendPayload.images as Array<any>), ...urls] as
         | string
         | File[]
         | undefined;
@@ -54,6 +54,32 @@ export const deleteProperty = createAsyncThunk(
       const { data } = await axiosInstance.delete(
         `/property/property?propertyId=${propertyId}`
       );
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);
+
+export const getAllProperties = createAsyncThunk(
+  "property/get-all",
+  async (query: { userId: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get(
+        `/property/property?uesrId=${query.userId}`
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);
+
+export const getPropertyWithId = createAsyncThunk(
+  "property/get-withid",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get(`/property/${id}`);
       return data;
     } catch (error) {
       return rejectWithValue(handleErrors(error));
