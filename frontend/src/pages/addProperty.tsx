@@ -16,7 +16,7 @@ import { propertySchema } from "@/utils/schemas/property.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud, X } from "lucide-react";
 import { useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 export const AddProperty = () => {
@@ -31,16 +31,27 @@ export const AddProperty = () => {
     resolver: zodResolver(propertySchema),
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues: {
+      title: "",
+      address: { city: "", state: "", country: "" },
+      description: "",
+      featuresAndAminity: [],
+      images: [],
+      listingType: "",
+      otherProperty: [],
+      propertyType: "",
+    },
   });
   const handlepropertyAdd = (values: z.infer<typeof propertySchema>) => {
-    values;
+    console.log(values);
+    ;
   };
 
   const [aminity, setAminity] = useState<string>("");
   const [otherfeature, setOtherFeature] = useState<string>("");
   return (
     <main className="w-full min-h-screen  ">
-      <section className="wrapper ">
+      <form onSubmit={handleSubmit(handlepropertyAdd)} className="wrapper ">
         <div className="w-full py-5">
           <h2 className="font-semibold text-2xl">Add new Property</h2>
         </div>
@@ -63,6 +74,9 @@ export const AddProperty = () => {
                   placeholder="title.."
                   className="w-full"
                 />
+                <span className="text-red-600 text-sm">
+                  {errors && errors.title && errors.title.message}
+                </span>
               </div>
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="" className="text-sm">
@@ -79,12 +93,15 @@ export const AddProperty = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {propertyType.map((val) => (
-                      <SelectItem value={val} className="capitalize">
+                      <SelectItem value={val} key={val} className="capitalize">
                         {val}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <span className="text-red-600 text-sm">
+                  {errors && errors.propertyType && errors.propertyType.message}
+                </span>
               </div>
             </div>
             <div className="w-full grid grid-cols-1 md:grid-cols-2 mt-3 gap-3">
@@ -103,12 +120,15 @@ export const AddProperty = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {sellTypes.map((val) => (
-                      <SelectItem value={val} className="capitalize">
+                      <SelectItem value={val} key={val} className="capitalize">
                         {val}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <span className="text-red-600 text-sm">
+                  {errors && errors.listingType && errors.listingType.message}
+                </span>
               </div>
               <div className="flex flex-col gap-1 ">
                 <label htmlFor="" className="text-sm">
@@ -125,6 +145,9 @@ export const AddProperty = () => {
                   }}
                   value={watch("price")}
                 />
+                <span className="text-red-600 text-sm">
+                  {errors && errors.price && errors.price.message}
+                </span>
               </div>
               {/* <div className="flex flex-col gap-1 ">
                 <label htmlFor="" className="text-sm">
@@ -175,6 +198,9 @@ export const AddProperty = () => {
                   className="w-full h-[100px] resize-none"
                   placeholder="description..."
                 />
+                <span className="text-red-600 text-sm">
+                  {errors && errors.description && errors.description.message}
+                </span>
               </div>
             </div>
           </div>
@@ -193,6 +219,9 @@ export const AddProperty = () => {
                 value={watch("address.city")}
                 className="w-full"
               />
+              <span className="text-red-600 text-sm">
+                {errors && errors.address?.city && errors.address?.city.message}
+              </span>
             </div>
             <div className="flex flex-col gap-1 mt-3">
               <label htmlFor="" className="text-sm">
@@ -207,6 +236,11 @@ export const AddProperty = () => {
                 }}
                 value={watch("address.state")}
               />
+              <span className="text-red-600 text-sm">
+                {errors &&
+                  errors.address?.state &&
+                  errors.address?.state.message}
+              </span>
             </div>
             <div className="flex flex-col gap-1 mt-3">
               <label htmlFor="" className="text-sm">
@@ -221,6 +255,11 @@ export const AddProperty = () => {
                 value={watch("address.country")}
                 className="w-full"
               />
+              <span className="text-red-600 text-sm">
+                {errors &&
+                  errors.address?.country &&
+                  errors.address?.country.message}
+              </span>
             </div>
             <div className="flex flex-col gap-1 mt-3">
               <label htmlFor="" className="text-sm">
@@ -235,6 +274,11 @@ export const AddProperty = () => {
                 value={watch("address.zipcode")}
                 className="w-full"
               />
+              <span className="text-red-600 text-sm">
+                {errors &&
+                  errors.address?.zipcode &&
+                  errors.address?.zipcode.message}
+              </span>
             </div>
           </div>
         </div>
@@ -268,11 +312,11 @@ export const AddProperty = () => {
           </div>
           {watch("images") && watch("images").length > 0 && (
             <>
-              <div className="w-full min-h-36 p-3 border rounded-md mt-3 grid xl:grid-cols-7 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+              <div className="w-full min-h-36 p-3 border rounded-md mt-3 grid xl:grid-cols-7 grid-cols-2 md:grid-cols-4 gap-3 lg:grid-cols-6">
                 {watch("images")?.map((val, Id) => (
                   <div
                     key={Id}
-                    className="h-56 w-full border rounded-md relative"
+                    className="h-56 w-full border rounded-md relative overflow-hidden"
                   >
                     <div className="absolute right-2 top-2 size-7 cursor-pointer bg-black/10 rounded-full  flex-center">
                       <X
@@ -299,6 +343,9 @@ export const AddProperty = () => {
               </div>
             </>
           )}
+          <span className="text-red-600 text-sm">
+            {errors && errors.images && errors.images.message}
+          </span>
         </div>
         <div className="mt-3 p-5 w-full border rounded-md">
           <div className="w-full ">
@@ -339,6 +386,11 @@ export const AddProperty = () => {
                   Add
                 </Button>
               </div>
+              <span className="text-red-600 text-sm">
+                {errors &&
+                  errors.featuresAndAminity &&
+                  errors.featuresAndAminity.message}
+              </span>
               <div className="w-full border rounded-md min-h-12 p-2 space-y-3">
                 {watch("featuresAndAminity")?.map((am, Id) => (
                   <div
@@ -395,6 +447,9 @@ export const AddProperty = () => {
                   Add
                 </Button>
               </div>
+              <span className="text-red-600 text-sm">
+                {errors && errors.otherProperty && errors.otherProperty.message}
+              </span>
               <div className="w-full border rounded-md min-h-12 p-2 space-y-3">
                 {watch("otherProperty")?.map((am, Id) => (
                   <div
@@ -424,7 +479,7 @@ export const AddProperty = () => {
             <LoaderButton type="submit">Submit</LoaderButton>
           </div>
         </div>
-      </section>
+      </form>
     </main>
   );
 };

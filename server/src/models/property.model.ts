@@ -31,7 +31,12 @@ const propertyModel = new mongoose.Schema(
     totalFloor: Number,
     userId: mongoose.Types.ObjectId,
     images: [String],
-    status: Boolean,
+    status: {
+      type: String,
+      enum: ["publish", "unpublish"],
+    },
+    featuresAndAminity: [String],
+    otherProperty: [String],
   },
   { timestamps: true }
 );

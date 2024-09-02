@@ -13,20 +13,24 @@ export const propertySchema = z.object({
   address: z.object({
     city: z
       .string()
+      // .nonempty()
       .min(2, { message: "City must be at least 2 characters long." })
       .max(50, { message: "City must be less than 50 characters." }),
     state: z
       .string()
+      // .nonempty()
       .min(2, { message: "State must be at least 2 characters long." })
       .max(50, { message: "State must be less than 50 characters." }),
     zipcode: z
       .string()
+      // .nonempty()
       .length(6, { message: "Zipcode must be exactly 6 characters." })
       .refine((val) => !isNaN(Number(val)), {
         message: "Enter zipcode in number format.",
       }),
     country: z
       .string()
+      // .nonempty()
       .min(2, { message: "Country must be at least 2 characters long." })
       .max(50, { message: "Country must be less than 50 characters." }),
   }),
@@ -39,7 +43,11 @@ export const propertySchema = z.object({
   otherProperty: z.array(z.string(), {
     message: "Other property must be an array of strings.",
   }),
-  images: z.array(z.instanceof(File), {
-    message: "Images must be an array of File objects.",
-  }),
+  images: z.array(
+    z
+      .union([z.instanceof(File), z.string()])
+      .refine((val) => val instanceof File || typeof val === "string", {
+        message: "Each image must be either a File object or a string (URL).",
+      })
+  ).min(1, { message: "At least one image is required." }),
 });
