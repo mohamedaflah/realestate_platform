@@ -12,20 +12,31 @@
    -> setup .env based .env.local
    -> npm run dev
 
-## api doc
+# Api doc
+* User
+ 1. /api/user/user => POST => signupHandling
+ 2. /api/user/user => DELETE => logout handling
+ 3. /api/user/user => GET => get user with cookie
 
-1. add restaurant => /api/restaurant = POST method
-2. delete restaurant => /api/restaurant = DELETE method
-3. update restaurant => /api/restaurant = PUT method
-3. retrieve all restaurants => /api/restaurant = GET method
+* Property
+ 1. /api/property/property => POST => add new property
+ 2. /api/property/property => DELETE => delete existing property
+ 3. /api/property/property => PUT => update property
+ 4. /api/property/property => GET => list all properties
+ 5. /api/property/withuser/:userId => GET => retrieving user posted properties
+ 6. /api/property/:propertyId => GET => retrieving single property with id
+
+ 
 
 
 
 # Home page
 
-[![Home page](/media/res1.png)]()
+[![Home page](/media/realestate.png)]()
 
 # Admin restaurant add
 
-[![Add new column](/media/res2.png)]()
+[![Add new column](/media/image.png)]()
 
+
+# more pages available
