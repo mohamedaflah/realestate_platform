@@ -4,16 +4,24 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { HandCoins, Heart, MapPin, MoveRight } from "lucide-react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isVerified, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getAllProperties({ userId: user?._id ? String(user?._id) : "" }));
+    dispatch(
+      getAllProperties({
+        userId: user?._id ? String(user?._id) : "",
+        search: searchParam.get("search")
+          ? String(searchParam.get("search"))
+          : "",
+      })
+    );
   }, [dispatch, user?._id]);
   const { properties } = useAppSelector((state) => state.property);
+  const [searchParam, setSearchParam] = useSearchParams();
   return (
     <main className="w-full h-screen bg-[url(/images/Base.png)] bg-cover bg-center pt-20 flex items-end flex-col">
       <section className="main grid grid-cols-1 lg:grid-cols-2 ">
@@ -137,7 +145,7 @@ const Home = () => {
             <h3 className="text-sm">Some of our picked properties for you</h3>
           </div>
           <div className="w-full mt-8 min-h-28 flex justify-between items-center flex-col lg:flex-row">
-            <div className="h-14 w-64 border bg-[#F0EFFB] px-1 rounded-lg flex items-center gap-2">
+            <div className="h-14  w-64 border bg-[#F0EFFB] px-1 rounded-lg flex items-center gap-2" style={{visibility:"hidden"}}>
               <Button variant={"outline"} className="h-[84%] w-full">
                 Rent
               </Button>
@@ -148,16 +156,43 @@ const Home = () => {
                 Lease
               </Button>
             </div>
-            <div className="h-14 w-64 border rounded-md px-3 bg-[#F7F7FD] flex items-center">
-              <img src="/icons/lens2.svg" className="w-5" alt="" />
-              <input
-                type="text"
-                className="w-full h-full text-sm outline-none border-none bg-transparent px-2"
-                placeholder="Search.."
-              />
+            <div className="flex gap-3">
+              <div className="h-12 w-64 border rounded-md px-3 bg-[#F7F7FD] flex items-center">
+                <img src="/icons/lens2.svg" className="w-5" alt="" />
+                <input
+                  type="text"
+                  onChange={({ target }) => {
+                    const param = new URLSearchParams(searchParam.toString());
+                    param.set("search", target.value);
+                    setSearchParam(param);
+                  }}
+                  className="w-full h-full text-sm outline-none border-none bg-transparent px-2"
+                  placeholder="Search.."
+                />
+              </div>
+              <Button
+                className="h-12 bg-colors-forground"
+                onClick={() => {
+                  dispatch(
+                    getAllProperties({
+                      userId: user?._id ? String(user?._id) : "",
+                      search: searchParam.get("search")
+                        ? String(searchParam.get("search"))
+                        : "",
+                    })
+                  );
+                }}
+              >
+                Search
+              </Button>
             </div>
           </div>
           <section className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-4">
+            {properties && properties?.length <= 0 && (
+              <div className="w-full h-28 flex-center">
+                <h1 className="font-semibold text-lg">No result found</h1>
+              </div>
+            )}
             {properties?.map((property, Id) => (
               <div
                 key={String(property?._id + "" + Id)}

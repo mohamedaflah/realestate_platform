@@ -74,10 +74,10 @@ export const deleteProperty = createAsyncThunk(
 
 export const getAllProperties = createAsyncThunk(
   "property/get-all",
-  async (query: { userId: string }, { rejectWithValue }) => {
+  async (query: { userId: string; search: string }, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(
-        `/property/property?userId=${query.userId}`
+        `/property/property?userId=${query.userId}&search=${query.search}`
       );
       return data;
     } catch (error) {
