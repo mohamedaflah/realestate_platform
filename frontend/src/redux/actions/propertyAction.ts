@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { axiosInstance } from "@/constants/axiosInstance";
 import { IProperty } from "@/types/property.types";
@@ -22,7 +23,15 @@ export const propertyAdd = createAsyncThunk(
 export const updateProperty = createAsyncThunk(
   "proprty/update-property",
   async (
-    { sendPayload, propertyId }: { propertyId: string; sendPayload: IProperty },
+    {
+      sendPayload,
+      propertyId,
+      type = "normal",
+    }: {
+      propertyId: string;
+      sendPayload: IProperty;
+      type: "status" | "normal";
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -41,7 +50,8 @@ export const updateProperty = createAsyncThunk(
         data: sendPayload,
         propertyId,
       });
-      return data;
+
+      return { ...data, type, status: sendPayload.status };
     } catch (error) {
       return rejectWithValue(handleErrors(error));
     }
@@ -54,7 +64,8 @@ export const deleteProperty = createAsyncThunk(
       const { data } = await axiosInstance.delete(
         `/property/property?propertyId=${propertyId}`
       );
-      return data;
+      data;
+      return propertyId;
     } catch (error) {
       return rejectWithValue(handleErrors(error));
     }
@@ -66,7 +77,7 @@ export const getAllProperties = createAsyncThunk(
   async (query: { userId: string }, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(
-        `/property/property?uesrId=${query.userId}`
+        `/property/property?userId=${query.userId}`
       );
       return data;
     } catch (error) {
@@ -80,6 +91,17 @@ export const getPropertyWithId = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(`/property/${id}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);
+export const getPropertyWithUser = createAsyncThunk(
+  "property/get-withuser",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get(`/property/withuser/${userId}`);
       return data;
     } catch (error) {
       return rejectWithValue(handleErrors(error));

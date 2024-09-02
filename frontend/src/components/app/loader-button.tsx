@@ -29,7 +29,9 @@ export const LoaderButton = ({
       {children}
       {loading && (
         <>
-          <LoaderCircle className="w-5 animate-spin" />
+          <div className="animate-spin">
+            <LoaderCircle className="w-5 bg  " />
+          </div>
         </>
       )}
     </Button>

@@ -5,6 +5,8 @@ import propertyModel from "../../models/property.model";
 export const getAllProperties = async (req: Request, res: Response) => {
   try {
     const { userId, search, sellTypes } = req.query;
+    console.log(userId, " =>");
+
     const properties = await propertyModel.find({
       status: "publish",
       userId: { $ne: userId },

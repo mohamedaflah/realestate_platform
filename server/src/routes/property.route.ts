@@ -14,6 +14,6 @@ propertyRoute
   .delete(deletePropertyController)
   .put(updatePropertyController)
   .get(getAllProperties);
-propertyRoute.get(`/withuser`, getPropertiesWithUser);
+propertyRoute.get(`/withuser/:userId`, getPropertiesWithUser);
 propertyRoute.get(`/:propertyId`, getPropertyWithId);
 export default propertyRoute;

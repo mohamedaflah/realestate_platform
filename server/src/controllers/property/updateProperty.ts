@@ -10,9 +10,10 @@ export const updatePropertyController = async (req: Request, res: Response) => {
       { $set: data },
       { new: true }
     );
+    console.log("🚀 ~ updatePropertyController ~ property:", property)
     return res
       .status(200)
-      .json({ status: true, message: "Successful", property });
+      .json({ status: true, message: "Successful", property,propertyId });
   } catch (error: ErrType) {
     return res
       .status(500)

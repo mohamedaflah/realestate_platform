@@ -11,7 +11,7 @@ const Home = () => {
   const { isVerified, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getAllProperties({ userId: user?._id ? user?._id : "" }));
+    dispatch(getAllProperties({ userId: user?._id ? String(user?._id) : "" }));
   }, [dispatch, user?._id]);
   const { properties } = useAppSelector((state) => state.property);
   return (
@@ -209,9 +209,12 @@ const Home = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="mt-3 w-full" onClick={()=>{
-                    navigate(`/property/${String(property?._id)}`)
-                  }}>
+                  <div
+                    className="mt-3 w-full"
+                    onClick={() => {
+                      navigate(`/property/${String(property?._id)}`);
+                    }}
+                  >
                     <Button className="h-10 w-full bg-colors-forground gap-2">
                       Go to Details <MoveRight />
                     </Button>
