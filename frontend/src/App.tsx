@@ -7,6 +7,7 @@ import { Login } from "./pages/Login";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./redux/store";
 import { getUser } from "./redux/actions/user.action";
+import { AddProperty } from "./pages/addProperty";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ function App() {
           path="/login"
           element={isVerified ? <Navigate to={"/"} /> : <Login />}
         />
+        <Route path="/add-property" element={<AddProperty />} />
       </Routes>
     </main>
   );

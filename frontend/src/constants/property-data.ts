@@ -24,3 +24,4 @@ export const propertyItem = {
   ],
   luxury: ["Luxury Apartments", "Mansions", "Estates", "Beachfront Properties"],
 };
+export const publishStatus = ["publish", "unpublish"];
