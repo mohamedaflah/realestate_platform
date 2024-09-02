@@ -34,7 +34,7 @@
 
 [![Home page](/media/realestate.png)]()
 
-# Admin restaurant add
+# User or Seller Property add
 
 [![Add new column](/media/image.png)]()
 
