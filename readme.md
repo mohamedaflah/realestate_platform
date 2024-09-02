@@ -6,8 +6,8 @@
    -> npm install
    -> setup .env based .env.local
    -> npm run dev
-
-3. cd server
+3. open new Terminal without closing existing terminal
+4. cd server
    -> npm install
    -> setup .env based .env.local
    -> npm run dev
