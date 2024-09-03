@@ -43,7 +43,7 @@ const Header = () => {
                 placeholder={"logout"}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
-                className="bg-colors-forground hover:bg-colors-forground"
+                className="bg-colors-forground hover:bg-colors-forground text-[11px] py-2 px-3"
                 onClick={() => dispatch(logoutUser())}
               >
                 Logout

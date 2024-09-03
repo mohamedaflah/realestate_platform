@@ -3,7 +3,12 @@
 
 //   </main>;
 // };
+import { cn } from "@/lib/utils";
+import { getAlluserAction } from "@/redux/actions/user.action";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Button, Card, Typography } from "@material-tailwind/react";
+import { format } from "date-fns";
+import { useEffect } from "react";
 
 const TABLE_HEAD = ["Username", "Phone number", "Joined date", "Actions"];
 
@@ -36,6 +41,11 @@ const TABLE_ROWS = [
 ];
 
 export function UserList() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getAlluserAction());
+  }, [dispatch]);
+  const { users } = useAppSelector((state) => state.user);
   return (
     <Card
       className="h-full w-full overflow-scroll"
@@ -66,12 +76,12 @@ export function UserList() {
           </tr>
         </thead>
         <tbody>
-          {TABLE_ROWS.map(({ name, job, date }, index) => {
+          {users?.map(({ username, phoneNumber, status, createdAt,_id }, index) => {
             const isLast = index === TABLE_ROWS.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
             return (
-              <tr key={name}>
+              <tr key={String(_id)}>
                 <td className={classes}>
                   <Typography
                     variant="small"
@@ -81,7 +91,7 @@ export function UserList() {
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   >
-                    {name}
+                    {username}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -93,7 +103,7 @@ export function UserList() {
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   >
-                    {job}
+                    {phoneNumber}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -105,7 +115,7 @@ export function UserList() {
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
                   >
-                    {date}
+                    {format(createdAt as unknown as string, "PPP")}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -124,9 +134,12 @@ export function UserList() {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        className="p-2 text-[11px] bg-red-400"
+                        className={cn("p-2 text-[11px]", {
+                          "bg-red-400": !status,
+                          "bg-green-400": status,
+                        })}
                       >
-                        Block
+                        {status ? "Block" : "Unblock"}
                       </Button>
                     </div>
                   </Typography>

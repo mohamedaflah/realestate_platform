@@ -7,6 +7,8 @@ export interface IUser {
   phoneNumber: string;
   password: string;
   role?: "admin" | "user";
+  status?:boolean
+  createdAt?:Date
 }
 export interface IUserInitial {
   loading: boolean;
