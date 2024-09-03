@@ -3,8 +3,8 @@ import propertyModel from "../../models/property.model";
 
 export const getPropertiesWithUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    const properties = await propertyModel.find({ userId: userId });
+    // const { userId } = req.params;
+    const properties = await propertyModel.find({});
     return res
       .status(200)
       .json({ status: true, message: "Success", properties });

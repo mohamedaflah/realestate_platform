@@ -26,7 +26,7 @@ const Home = () => {
     <main className="w-full h-screen bg-[url(/images/Base.png)] bg-cover bg-center pt-20 flex items-end flex-col">
       <section className="main grid grid-cols-1 lg:grid-cols-2 ">
         <section className="w-full h-full flex flex-col gap-5   ">
-          <div className="w-[70%] flex flex-col gap-5 ">
+          <div className="w-[70%] flex flex-col gap-5 " data-aos="fade-right">
             <h1
               className="font-bold   text-4xl md:text-[3.5rem] text-colors-text capitalize"
               style={{ lineHeight: "60px" }}
@@ -40,7 +40,7 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div className="w-full relative pr-2">
+          <div className="w-full relative pr-2" data-aos="fade-right">
             <div className="w-full flex flex-col">
               <div className="min-h-10 w-36 min-w-56 rounded-tl-md rounded-tr-md  bg-white flex gap-2 border-b ">
                 <div className="w-full text-colors-forground font-semibold h-full border-colors-forground border-b-2 py-3 px-5 flex justify-center">
@@ -119,7 +119,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <section className="w-full h-full flex items-start bg-[url(/images/house.png)] bg-cover bg-center">
+        <section className="w-full h-full flex items-start bg-[url(/images/house.png)] bg-cover bg-center" data-aos="fade-left">
           {/* <img src={"/images/house.png"} className="border" alt="" /> */}
         </section>
       </section>

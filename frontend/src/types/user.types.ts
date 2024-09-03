@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   phoneNumber: string;
   password: string;
+  role?: "admin" | "user";
 }
 export interface IUserInitial {
   loading: boolean;

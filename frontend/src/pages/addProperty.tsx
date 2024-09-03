@@ -69,7 +69,7 @@ export const AddProperty = () => {
   return (
     <main className="w-full min-h-screen  ">
       <form onSubmit={handleSubmit(handlepropertyAdd)} className="wrapper ">
-        <div className="w-full py-5">
+        <div className="w-full py-2">
           <h2 className="font-semibold text-2xl">Add new Property</h2>
         </div>
         <div className="w-full mt-3 grid grid-cols-1 lg:grid-cols-12 gap-3">

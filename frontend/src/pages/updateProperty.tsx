@@ -60,6 +60,7 @@ export const UpdateProperty = () => {
       updateProperty({
         propertyId: String(propertyId),
         sendPayload: { ...values, userId: String(user?._id) } as any,
+        type: "normal"
       })
     ).then((res) => {
       if (res.type.endsWith("fulfilled")) {
@@ -94,8 +95,8 @@ export const UpdateProperty = () => {
   return (
     <main className="w-full min-h-screen  ">
       <form onSubmit={handleSubmit(handlePropertyUpdate)} className="wrapper ">
-        <div className="w-full py-5">
-          <h2 className="font-semibold text-2xl">Add new Property</h2>
+        <div className="w-full py-3">
+          <h2 className="font-semibold text-2xl">Update Property</h2>
         </div>
         <div className="w-full mt-3 grid grid-cols-1 lg:grid-cols-12 gap-3">
           <div className="col-span-7 w-full rounded-lg border p-5">

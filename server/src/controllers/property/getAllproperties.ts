@@ -13,9 +13,9 @@ export const getAllProperties = async (req: Request, res: Response) => {
       title: { $regex: search, $options: "i" },
     };
 
-    if (userId && userId !== "") {
-      query.userId = { $ne: userId };
-    }
+    // if (userId && userId !== "") {
+    //   query.userId = { $ne: userId };
+    // }
 
     const properties = await propertyModel.find(query);
     

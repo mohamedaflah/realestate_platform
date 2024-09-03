@@ -11,13 +11,23 @@ import { AddProperty } from "./pages/addProperty";
 import { PropertyDetail } from "./pages/propertyDetail";
 import { MyPosts } from "./pages/MyPosts";
 import { UpdateProperty } from "./pages/updateProperty";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { AdminLayout } from "./layouts/admin.layout";
+import { PropertyList } from "./pages/admin/property-list";
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
   const { isVerified } = useAppSelector((state) => state.user);
+  useEffect(() => {
+    AOS.init({
+      disable: "phone",
+      duration: 800,
+      easing: "ease-out-cubic",
+    });
+  }, []);
   return (
     <main>
       <Header />
@@ -31,13 +41,21 @@ function App() {
           path="/login"
           element={isVerified ? <Navigate to={"/"} /> : <Login />}
         />
-        <Route path="/add-property" element={<AddProperty />} />
         <Route path="/property/:propertyId" element={<PropertyDetail />} />
         <Route path="/myproperties" element={<MyPosts />} />
+        <Route path="/add-property" element={<AddProperty />} />
         <Route
           path="/update-property/:propertyId"
           element={<UpdateProperty />}
         />
+        <Route path="/admin/" element={<AdminLayout />}>
+          <Route index element={<PropertyList />} />
+          <Route
+            path="update-property/:propertyId"
+            element={<UpdateProperty />}
+          />
+          <Route path="add-property" element={<AddProperty />} />
+        </Route>
       </Routes>
     </main>
   );

@@ -33,7 +33,7 @@ const Header = () => {
           ) : (
             <>
               <Button
-                variant={"outline"}
+                variant={"outline"} className="hidden"
                 onClick={() => isVerified && navigate("/myproperties")}
               >
                 My posts

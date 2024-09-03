@@ -17,6 +17,15 @@ const userModel = new mongoose.Schema(
       // unique: true,
       type: String,
     },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
