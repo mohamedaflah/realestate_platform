@@ -5,6 +5,8 @@ import { getUserController } from "../controllers/users/getUser.controller";
 import { loginUserController } from "../controllers/users/login.controller";
 import { validateUserDetails } from "../controllers/users/validateDetails";
 import { userAccessCheck } from "../middleware/accesscheck";
+import { checkisAdmin } from "../middleware/checkAdminAuth";
+import { getAllusersController } from "../controllers/users/getAllusers";
 
 const userRouter = Router();
 
@@ -15,4 +17,5 @@ userRouter
   .get(getUserController);
 userRouter.post("/login", userAccessCheck, loginUserController);
 userRouter.post("/validate", validateUserDetails);
+userRouter.get("/getalluser", checkisAdmin, getAllusersController);
 export default userRouter;

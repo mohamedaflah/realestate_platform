@@ -13,5 +13,6 @@ export interface IUserInitial {
   verificationCheck: ConfirmationResult | null;
   isVerified: boolean;
   user: IUser | null;
+  users:IUser[]|null
   err: string | boolean;
 }

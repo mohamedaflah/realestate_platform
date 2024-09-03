@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { logoutUser } from "@/redux/actions/user.action";
-
+import { Button as MButton } from "@material-tailwind/react";
 const Header = () => {
   const navigate = useNavigate();
   const { isVerified } = useAppSelector((state) => state.user);
@@ -33,17 +33,21 @@ const Header = () => {
           ) : (
             <>
               <Button
-                variant={"outline"} className="hidden"
+                variant={"outline"}
+                className="hidden"
                 onClick={() => isVerified && navigate("/myproperties")}
               >
                 My posts
               </Button>
-              <Button
+              <MButton
+                placeholder={"logout"}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
                 className="bg-colors-forground hover:bg-colors-forground"
                 onClick={() => dispatch(logoutUser())}
               >
                 Logout
-              </Button>
+              </MButton>
             </>
           )}
         </div>

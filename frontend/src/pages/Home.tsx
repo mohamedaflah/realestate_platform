@@ -65,16 +65,16 @@ const Home = () => {
                 <div className="w-full h-full flex flex-col">
                   <Button
                     className="h-full bg-colors-forground"
-                    onClick={() => {
-                      if (isVerified) {
-                        navigate("/add-property");
-                      } else {
-                        toast.error("Please login or register account");
-                        navigate("/login");
-                      }
-                    }}
+                    // onClick={() => {
+                    //   if (isVerified) {
+                    //     navigate("/add-property");
+                    //   } else {
+                    //     toast.error("Please login or register account");
+                    //     navigate("/login");
+                    //   }
+                    // }}
                   >
-                    Sell Property
+                    Brows properties
                   </Button>
                 </div>
               </div>
@@ -119,11 +119,14 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <section className="w-full h-full flex items-start bg-[url(/images/house.png)] bg-cover bg-center" data-aos="fade-left">
+        <section
+          className="w-full h-full flex items-start bg-[url(/images/house.png)] bg-cover bg-center"
+          data-aos="fade-left"
+        >
           {/* <img src={"/images/house.png"} className="border" alt="" /> */}
         </section>
       </section>
-      <div className="main  h-28 flex-center  mt-3 py-10">
+      <div className="main  h-28 flex-center  mt-3 py-10 hidden">
         <Button
           onClick={() => {
             if (isVerified) {
@@ -145,7 +148,10 @@ const Home = () => {
             <h3 className="text-sm">Some of our picked properties for you</h3>
           </div>
           <div className="w-full mt-8 min-h-28 flex justify-between items-center flex-col lg:flex-row">
-            <div className="h-14  w-64 border bg-[#F0EFFB] px-1 rounded-lg flex items-center gap-2" style={{visibility:"hidden"}}>
+            <div
+              className="h-14  w-64 border bg-[#F0EFFB] px-1 rounded-lg flex items-center gap-2"
+              style={{ visibility: "hidden" }}
+            >
               <Button variant={"outline"} className="h-[84%] w-full">
                 Rent
               </Button>
@@ -187,7 +193,7 @@ const Home = () => {
               </Button>
             </div>
           </div>
-          <section className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-4">
+          <section /*data-aos="fade-up"*/ className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-4 ">
             {properties && properties?.length <= 0 && (
               <div className="w-full h-28 flex-center">
                 <h1 className="font-semibold text-lg">No result found</h1>
@@ -195,6 +201,9 @@ const Home = () => {
             )}
             {properties?.map((property, Id) => (
               <div
+                data-aos="fade-top"
+                data-aos-delay={Id * 50} // Example: delay each item by 100ms more than the previous one
+                data-aos-duration="900"
                 key={String(property?._id + "" + Id)}
                 className="w-full min-h-96 flex flex-col rounded-lg cursor-pointer border overflow-hidden border-[#F0EFFB]"
               >

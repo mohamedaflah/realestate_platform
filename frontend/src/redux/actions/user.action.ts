@@ -68,3 +68,15 @@ export const validateUser = createAsyncThunk(
     }
   }
 );
+
+export const getAlluserAction = createAsyncThunk(
+  "user/admin/getuser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get("/getalluser");
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);

@@ -1,6 +1,7 @@
 import { IUserInitial } from "@/types/user.types";
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  getAlluserAction,
   getUser,
   logoutUser,
   userLogin,
@@ -14,6 +15,7 @@ const initialState: IUserInitial = {
   verificationCheck: null,
   isVerified: false,
   user: null,
+  users: null,
 };
 
 const userReducer = createSlice({
@@ -92,9 +94,21 @@ const userReducer = createSlice({
         state.loading = false;
       })
       .addCase(validateUser.rejected, (state, { payload }) => {
-        state.loading=false
+        state.loading = false;
         state.err = String(payload);
         toast.error(state.err);
+      })
+      .addCase(getAlluserAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAlluserAction.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.err = false;
+        state.users = payload.users;
+      })
+      .addCase(getAlluserAction.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.err=String(payload)
       });
   },
 });

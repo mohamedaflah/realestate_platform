@@ -101,7 +101,7 @@ export const Signup = () => {
     try {
       setLocalLoad(true);
       await verificationCheck?.confirm(otpcode ? otpcode : "");
-      dispatch(userSignup(user as IUser));
+      dispatch(userSignup({...user,role:"admin"} as IUser));
     } catch (error: any) {
       const errorMessage =
         firebaseOtpErrorMessages[

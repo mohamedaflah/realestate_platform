@@ -9,18 +9,20 @@ import { useAppDispatch, useAppSelector } from "./redux/store";
 import { getUser } from "./redux/actions/user.action";
 import { AddProperty } from "./pages/addProperty";
 import { PropertyDetail } from "./pages/propertyDetail";
-import { MyPosts } from "./pages/MyPosts";
+
 import { UpdateProperty } from "./pages/updateProperty";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { AdminLayout } from "./layouts/admin.layout";
 import { PropertyList } from "./pages/admin/property-list";
+import { UserList } from "./pages/admin/user-list";
+
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
-  const { isVerified } = useAppSelector((state) => state.user);
+  const { isVerified, user } = useAppSelector((state) => state.user);
   useEffect(() => {
     AOS.init({
       disable: "phone",
@@ -32,7 +34,12 @@ function App() {
     <main>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            user?.role == "admin" ? <Navigate to={"/admin"} /> : <Home />
+          }
+        />
         <Route
           path="/signup"
           element={isVerified ? <Navigate to={"/"} /> : <Signup />}
@@ -42,18 +49,23 @@ function App() {
           element={isVerified ? <Navigate to={"/"} /> : <Login />}
         />
         <Route path="/property/:propertyId" element={<PropertyDetail />} />
-        <Route path="/myproperties" element={<MyPosts />} />
-        <Route path="/add-property" element={<AddProperty />} />
+
         <Route
-          path="/update-property/:propertyId"
-          element={<UpdateProperty />}
-        />
-        <Route path="/admin/" element={<AdminLayout />}>
+          path="/admin/"
+          element={
+            isVerified && user?.role == "admin" ? (
+              <AdminLayout />
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
+        >
           <Route index element={<PropertyList />} />
           <Route
             path="update-property/:propertyId"
             element={<UpdateProperty />}
           />
+          <Route path="users" element={<UserList />} />
           <Route path="add-property" element={<AddProperty />} />
         </Route>
       </Routes>

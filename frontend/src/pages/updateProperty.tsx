@@ -64,7 +64,7 @@ export const UpdateProperty = () => {
       })
     ).then((res) => {
       if (res.type.endsWith("fulfilled")) {
-        navigate("/myproperties");
+        navigate("/");
         reset({});
       }
     });
