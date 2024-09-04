@@ -1,21 +1,57 @@
 import { Input } from "@/components/ui/input";
-import { getAllChat } from "@/redux/actions/chat.action";
+import { cn } from "@/lib/utils";
+import {
+  createMessage,
+  getAllChat,
+  getAllMessages,
+} from "@/redux/actions/chat.action";
+import { setMessageLocally } from "@/redux/reducers/chat.reducer";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { IMessage } from "@/types/chat.types";
 import { Button } from "@material-tailwind/react";
 import { Search, Send, User, Verified } from "lucide-react";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
+import { useLocation } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 export const ChatSection = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const { chats } = useAppSelector((state) => state.chat);
+  const { chats, selectedChatId, messages, selectedUserId } = useAppSelector(
+    (state) => state.chat
+  );
   useEffect(() => {
     if (user?._id) {
       dispatch(getAllChat(user?._id as string));
     }
   }, [dispatch, user?._id]);
   const { pathname } = useLocation();
+  useEffect(() => {
+    if (selectedChatId) {
+      dispatch(getAllMessages(selectedChatId));
+    }
+  }, [selectedChatId, dispatch]);
+  const [message, setMessage] = useState<string>("");
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      const sendObj = {
+        chatId: selectedChatId as string,
+        content: {
+          content: message,
+          type: "text",
+          isReply: false,
+        },
+        senderId: user?._id as string,
+        receiverId: "".trim() + selectedUserId?.trim(),
+        status: "unread",
+      };
+      dispatch(
+        setMessageLocally({ ...sendObj, _id: uuid(), createdAt: new Date() })
+      );
+      dispatch(createMessage(sendObj as IMessage));
+    }
+    setMessage("");
+  };
   return (
     <main
       className={`w-full ${
@@ -36,7 +72,7 @@ export const ChatSection = () => {
             </Button>
           </div>
         </div>
-        <div className="w-full h-[570px] overflow-y-auto py-5 ">
+        <div className="w-full h-[570px] overflow-y-auto py-5  ">
           {chats?.map((cht) => (
             <div
               className="w-full h-12 py-1 bg-blue-gray-50/50 flex px-2 items-center border-b"
@@ -73,26 +109,48 @@ export const ChatSection = () => {
             </div>
           </div>
         </div>
-        <div className="h-full w-full overflow-y-auto p-2">
-          <div className="w-full h-10 flex justify-start">
-            <div className="h-10 md:max-w-[50%] max-w-[80%] px-2 py-1 rounded-lg rounded-tl-none text-sm border">
-              Hello Mohamed Aflah
+        <div className="h-full w-full overflow-y-auto p-2 space-y-1">
+          {messages && messages?.length <= 0 && (
+            <>
+              <div className="w-full flex flex-center h-12">
+                <span>No message sended yet</span>
+              </div>
+            </>
+          )}
+
+          {messages?.map((msg) => (
+            <div
+              key={String(msg?._id)}
+              className={cn("w-full h-10 flex justify-start", {
+                "justify-end": msg.senderId == user?._id,
+              })}
+            >
+              <div
+                className={cn(
+                  "h-10 md:max-w-[50%] max-w-[80%] px-2 py-1 rounded-lg rounded-tl-none text-sm border",
+                  {
+                    "bg-colors-forground text-white": msg.senderId == user?._id,
+                  }
+                )}
+              >
+                {msg.content.content}
+              </div>
             </div>
-          </div>
-          <div className="w-full h-10 flex justify-end">
-            <div className="h-10 md:max-w-[50%] max-w-[80%] px-2 py-1 rounded-lg rounded-tr-none bg-colors-forground text-white text-sm border">
-              Hello Mohamed Aflah
-            </div>
-          </div>
+          ))}
         </div>
         <div className="w-full h-28 border-t flex p-2 ">
           <div className="w-full h-10  rounded-md flex gap-2">
             <input
+              onChange={(e) => {
+                setMessage(e.target.value.trim());
+              }}
+              value={message}
               type="text"
               className="h-full border rounded-md px-2 text-sm flex-1 "
               placeholder="Type message here.."
             />
             <Button
+              onClick={handleSendMessage}
               className="px-3 flex-center bg-colors-forground"
               placeholder={undefined}
               onPointerEnterCapture={undefined}

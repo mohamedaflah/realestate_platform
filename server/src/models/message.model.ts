@@ -10,6 +10,7 @@ const messageModel = new mongoose.Schema(
         type: String,
         enum: ["image", "video", "audio", "text"],
       },
+      content: String,
       isReply: Boolean,
     },
     status: {

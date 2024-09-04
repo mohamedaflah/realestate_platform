@@ -22,7 +22,7 @@ export const getPropertyWithId = async (req: Request, res: Response) => {
         $unwind: "$user",
       },
     ]);
-    console.log("🚀 ~ getPropertyWithId ~ property:", property)
+ 
     return res
       .status(200)
       .json({ status: true, property: property[0], message: "Success" });

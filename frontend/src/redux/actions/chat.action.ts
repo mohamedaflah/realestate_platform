@@ -41,3 +41,17 @@ export const getAllChat = createAsyncThunk(
     }
   }
 );
+
+export const getAllMessages = createAsyncThunk(
+  "chat/message/getallmsg",
+  async (chatId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get(
+        `/chat/message?chatId=${chatId}`
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);

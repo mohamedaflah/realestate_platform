@@ -3,10 +3,11 @@ import { IUser } from "./user.types";
 export interface ChatReducerInitial {
   messageLoading: boolean;
   chatLoading: boolean;
-  chats: IUser[] | null;
+  chats: (IUser & { chatId: string })[] | null;
   messages: IMessage[] | null;
   error: boolean | string;
   selectedChatId: string | null;
+  selectedUserId: string | null;
 }
 
 export interface IMessage {
@@ -17,6 +18,7 @@ export interface IMessage {
   content: {
     type: "image" | "video" | "audio" | "text";
     isReply: boolean;
+    content: string;
   };
   status: "read" | "unread";
   repliedMessage?: string;

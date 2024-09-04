@@ -17,7 +17,9 @@ export const createChatController = async (req: Request, res: Response) => {
     });
     if (!chat) {
       chat = new chatModel({ members: [firstId, secondId] });
+      await chat.save()
     }
+    
     const user = await userModel.findOne({ _id: secondId });
     return res
       .status(201)

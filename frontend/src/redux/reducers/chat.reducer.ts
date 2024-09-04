@@ -1,6 +1,10 @@
 import { ChatReducerInitial } from "@/types/chat.types";
 import { createSlice } from "@reduxjs/toolkit";
-import { createChatAction, getAllChat } from "../actions/chat.action";
+import {
+  createChatAction,
+  getAllChat,
+  getAllMessages,
+} from "../actions/chat.action";
 import toast from "react-hot-toast";
 
 const initialState: ChatReducerInitial = {
@@ -10,11 +14,16 @@ const initialState: ChatReducerInitial = {
   messages: null,
   error: false,
   selectedChatId: null,
+  selectedUserId: null,
 };
 const chatReducer = createSlice({
   name: "chat-reducer",
   initialState,
-  reducers: {},
+  reducers: {
+    setMessageLocally: (state, { payload }) => {
+      state.messages?.push(payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createChatAction.pending, (state) => {
@@ -34,14 +43,26 @@ const chatReducer = createSlice({
       .addCase(getAllChat.fulfilled, (state, { payload }) => {
         state.chatLoading = false;
         state.chats = payload.chats;
-        state.selectedChatId = state?.chats?.[0]._id as string;
+        state.selectedChatId = state?.chats?.[0].chatId as string;
+        state.selectedUserId = state?.chats?.[0]._id as string;
       })
       .addCase(getAllChat.rejected, (state, { payload }) => {
         state.chatLoading = false;
         state.error = String(payload);
         toast.error(state.error);
+      })
+      .addCase(getAllMessages.pending, (state) => {
+        state.messageLoading = true;
+      })
+      .addCase(getAllMessages.fulfilled, (state, { payload }) => {
+        state.messageLoading = false;
+        state.messages = payload.messages;
+      })
+      .addCase(getAllMessages.rejected, (state, { payload }) => {
+        state.messageLoading = false;
+        state.error = String(payload);
       });
   },
 });
-
+export const { setMessageLocally } = chatReducer.actions;
 export default chatReducer.reducer;

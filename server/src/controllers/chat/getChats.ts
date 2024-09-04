@@ -5,8 +5,8 @@ import userModel from "../../models/user.model";
 
 export const getUserChatsController = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.query;
-
+    let { userId } = req.query;
+    userId = String(userId);
     const chats = await chatModel.aggregate([
       {
         $match: {
@@ -41,11 +41,27 @@ export const getUserChatsController = async (req: Request, res: Response) => {
           updatedAt: { $first: "$updatedAt" },
         },
       },
+      {
+        $project: {
+          _id: true,
+          createdAt: false,
+          updatedAt: false,
+          propertyId: false,
+        },
+      },
+      {
+        $unwind: "$opponentDetails",
+      },
     ]);
+    const users = chats.map((ch) => ({
+      ...ch.opponentDetails,
+      chatId: ch._id,
+    }));
+    console.log(chats);
 
     return res
       .status(200)
-      .json({ status: true, message: "Chats fetched", chats });
+      .json({ status: true, message: "Chats fetched", chats: users });
   } catch (error) {
     return res
       .status(500)
