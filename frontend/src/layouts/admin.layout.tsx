@@ -22,6 +22,12 @@ export const AdminLayout = () => {
           >
             Users
           </Link>
+          <Link
+            to={"chats"}
+            className="h-10 text-sm font-semibold shadow-md flex items-center w-full border px-2 rounded-md"
+          >
+            Chats
+          </Link>
         </div>
       </aside>
       <section className="flex-1 h-full py-4 px-12 overflow-y-auto scrollbar-none">

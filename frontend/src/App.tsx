@@ -23,6 +23,7 @@ import {
 import { io } from "socket.io-client";
 
 import { toast as ShadToast } from "sonner";
+import { ChatSection } from "./pages/admin/chats";
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -58,7 +59,6 @@ function App() {
   }, []);
   useEffect(() => {
     if (user?._id) {
-      
       socket?.emit("join-user", { id: String(user?._id) });
     }
   }, [user?._id, isVerified, socket]);
@@ -98,6 +98,7 @@ function App() {
             path="update-property/:propertyId"
             element={<UpdateProperty />}
           />
+          <Route path="chats" element={<ChatSection />} />
           <Route path="users" element={<UserList />} />
           <Route path="add-property" element={<AddProperty />} />
         </Route>

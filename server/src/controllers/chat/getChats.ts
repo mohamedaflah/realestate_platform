@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import chatModel from "../../models/chat.model";
-
+import userModel from "../../models/user.model";
 
 export const getUserChatsController = async (req: Request, res: Response) => {
   try {
@@ -23,7 +23,7 @@ export const getUserChatsController = async (req: Request, res: Response) => {
       },
       {
         $lookup: {
-          from: "users", // The name of the users collection
+          from: userModel.collection.name,
           localField: "members",
           foreignField: "_id",
           as: "opponentDetails",

@@ -13,7 +13,13 @@ import { Button, Card, Typography } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { useEffect } from "react";
 
-const TABLE_HEAD = ["Username", "Phone number", "Joined date", "Actions"];
+const TABLE_HEAD = [
+  "Username",
+  "Phone number",
+  "Joined date",
+  "Actions",
+  "Current status",
+];
 
 export function UserList() {
   const dispatch = useAppDispatch();
@@ -21,7 +27,8 @@ export function UserList() {
     dispatch(getAlluserAction());
   }, [dispatch]);
   const { users } = useAppSelector((state) => state.user);
-  const { socket } = useAppSelector((state) => state.socket);
+  const { socket, onlineUsers } = useAppSelector((state) => state.socket);
+
   return (
     <Card
       className="h-full w-full overflow-scroll"
@@ -132,6 +139,30 @@ export function UserList() {
                         >
                           {status ? "Block" : "Unblock"}
                         </Button>
+                      </div>
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      <div className="flex gap-1 items-center">
+                        {onlineUsers?.some((user) => user?.id == _id) ? (
+                          <>
+                            <div className="size-[6px] rounded-full bg-green-500"></div>
+                            <span>Online</span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="size-[6px] rounded-full bg-red-500"></div>
+                            <span>Offline</span>
+                          </>
+                        )}
                       </div>
                     </Typography>
                   </td>
