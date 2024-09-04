@@ -5,7 +5,7 @@ import userModel from "../../models/user.model";
 
 export const getUserChatsController = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.query;
 
     const chats = await chatModel.aggregate([
       {
