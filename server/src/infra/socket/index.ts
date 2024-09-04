@@ -48,5 +48,28 @@ export default (server: HttpServer) => {
         io.emit("get-online-users", onlineUsers);
       }
     });
+    socket.on("send-message", (message) => {
+      const useExist = checkUserExistStatus(message.receiverId);
+      if (useExist) {
+        const user = onlineUsers.find((user) => user.id === message.receiverId);
+        socket.to(user?.socketId as string).emit("send-msg", message);
+      }
+    });
   });
 };
+
+// export interface IMessage {
+//   _id?: string;
+//   chatId: string;
+//   senderId: string;
+//   receiverId: string;
+//   content: {
+//     type: "image" | "video" | "audio" | "text";
+//     isReply: boolean;
+//     content: string;
+//   };
+//   status: "read" | "unread";
+//   repliedMessage?: string;
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// }

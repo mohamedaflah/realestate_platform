@@ -17,6 +17,7 @@ import { v4 as uuid } from "uuid";
 export const ChatSection = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { socket } = useAppSelector((state) => state.socket);
   const { chats, selectedChatId, messages, selectedUserId } = useAppSelector(
     (state) => state.chat
   );
@@ -45,6 +46,11 @@ export const ChatSection = () => {
         receiverId: "".trim() + selectedUserId?.trim(),
         status: "unread",
       };
+      socket?.emit("send-message", {
+        ...sendObj,
+        _id: uuid(),
+        createdAt: new Date(),
+      });
       dispatch(
         setMessageLocally({ ...sendObj, _id: uuid(), createdAt: new Date() })
       );

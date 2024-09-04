@@ -24,6 +24,7 @@ import { io } from "socket.io-client";
 
 import { toast as ShadToast } from "sonner";
 import { ChatSection } from "./pages/admin/chats";
+import { setMessageLocally } from "./redux/reducers/chat.reducer";
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -44,6 +45,9 @@ function App() {
       socket?.on("blocked", () => {
         ShadToast("Your Access has been denied by admin");
         dispatch(logoutUser());
+      });
+      socket?.on("send-msg", (msg) => {
+        dispatch(setMessageLocally(msg));
       });
       return () => {
         socket?.disconnect();
