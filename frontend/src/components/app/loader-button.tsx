@@ -8,11 +8,13 @@ type loaderButtonProp = {
   type?: "submit" | "button";
   loading?: boolean;
   onClick?: () => void;
+  className?: string;
 };
 export const LoaderButton = ({
   children,
   type = "button",
   loading = false,
+  className,
   onClick,
   ...prop
 }: loaderButtonProp) => {
@@ -26,6 +28,7 @@ export const LoaderButton = ({
       type={type}
       className={cn(
         "w-full h-12 bg-colors-forground flex-center gap-2 hover:bg-colors-forground ",
+        className,
         { "pointer-events-none bg-colors-forground/70": loading }
       )}
     >

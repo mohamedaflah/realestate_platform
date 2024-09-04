@@ -1,10 +1,27 @@
 import { Input } from "@/components/ui/input";
+import { getAllChat } from "@/redux/actions/chat.action";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Button } from "@material-tailwind/react";
-import { Search, Send, User } from "lucide-react";
+import { Search, Send, User, Verified } from "lucide-react";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export const ChatSection = () => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
+  const { chats } = useAppSelector((state) => state.chat);
+  useEffect(() => {
+    if (user?._id) {
+      dispatch(getAllChat(user?._id as string));
+    }
+  }, [dispatch, user?._id]);
+  const { pathname } = useLocation();
   return (
-    <main className="w-full h-full flex lg:flex-row flex-col border-t">
+    <main
+      className={`w-full ${
+        pathname == "/messages" ? "h-screen" : "h-full"
+      } flex lg:flex-row flex-col border-t`}
+    >
       <aside className="lg:w-80 py-2 px-2 w-full  lg:h-full border-r flex flex-col">
         <div className="w-full border-b pb-4">
           <div className="flex h-10 w-full gap-2">
@@ -20,14 +37,26 @@ export const ChatSection = () => {
           </div>
         </div>
         <div className="w-full h-[570px] overflow-y-auto py-5 ">
-          <div className="w-full h-12 py-1 bg-blue-gray-50/50 flex px-2 items-center border-b">
-            <div className="size-10 bg-gray-200 flex-center  rounded-full overflow-hidden">
-              <User className="w-5" />
+          {chats?.map((cht) => (
+            <div
+              className="w-full h-12 py-1 bg-blue-gray-50/50 flex px-2 items-center border-b"
+              key={cht?._id}
+            >
+              <div className="size-10 bg-gray-200 flex-center  rounded-full overflow-hidden">
+                <User className="w-5" />
+              </div>
+              <div className="flex-1 px-2 line-clamp-1 py-1 h-full flex flex-col justify-between">
+                <span className="text-sm flex gap-2 items-center">
+                  {cht?.username}{" "}
+                  {cht?.username == "Admin" && (
+                    <>
+                      <Verified className="w-4 text-colors-forground" />
+                    </>
+                  )}
+                </span>
+              </div>
             </div>
-            <div className="flex-1 px-2 line-clamp-1 py-1 h-full flex flex-col justify-between">
-              <span className="text-sm">Mohamed Aflah</span>
-            </div>
-          </div>
+          ))}
         </div>
       </aside>
       <section className="flex-1 overflow-hidden  h-full flex flex-col">

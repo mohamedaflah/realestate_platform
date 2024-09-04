@@ -1,5 +1,8 @@
+import { LoaderButton } from "@/components/app/loader-button";
+import { createChatAction } from "@/redux/actions/chat.action";
 import { getPropertyWithId } from "@/redux/actions/propertyAction";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+
 import {
   ListStartIcon,
   Mail,
@@ -10,7 +13,8 @@ import {
   User,
 } from "lucide-react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const PropertyDetail = () => {
   useEffect(() => {
@@ -23,7 +27,10 @@ export const PropertyDetail = () => {
   useEffect(() => {
     dispatch(getPropertyWithId(String(propertyId)));
   }, [dispatch, propertyId]);
+  const navigate = useNavigate();
   const { property } = useAppSelector((state) => state.property);
+  const { chatLoading } = useAppSelector((state) => state.chat);
+  const { user, isVerified } = useAppSelector((state) => state.user);
   return (
     <main className="w-full h-screen">
       <section className="wrapper px-2 py-5">
@@ -50,7 +57,7 @@ export const PropertyDetail = () => {
                 <span className="capitalize">{property?.propertyType}</span>
               </div>
             </div>
-            <div className="flex">
+            <div className="flex justify-between">
               <div className="h-12 rounded-lg border flex items-center">
                 <div className="h-full border-r flex-center px-3">
                   <MapPin className="w-5" />
@@ -62,6 +69,29 @@ export const PropertyDetail = () => {
                   </h4>
                 </div>
               </div>
+              <LoaderButton
+                className="w-auto"
+                onClick={() => {
+                  if (!user?._id || !isVerified) {
+                    toast.error("Please create an account");
+                    navigate("/signup");
+                  } else {
+                    dispatch(
+                      createChatAction({
+                        firstId: user?._id as string,
+                        secondId: property?.userId as string,
+                      })
+                    ).then((res) => {
+                      if (res.type.endsWith("fulfilled")) {
+                        navigate("/messages");
+                      }
+                    });
+                  }
+                }}
+                loading={chatLoading}
+              >
+                Chat with seller
+              </LoaderButton>
             </div>
           </div>
           <div className="w-full rounded-lg py-3 px-5 border ">

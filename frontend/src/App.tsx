@@ -82,7 +82,7 @@ function App() {
           element={isVerified ? <Navigate to={"/"} /> : <Login />}
         />
         <Route path="/property/:propertyId" element={<PropertyDetail />} />
-
+        <Route path="/messages" element={<ChatSection />} />
         <Route
           path="/admin/"
           element={

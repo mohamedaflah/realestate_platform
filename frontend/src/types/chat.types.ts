@@ -5,6 +5,8 @@ export interface ChatReducerInitial {
   chatLoading: boolean;
   chats: IUser[] | null;
   messages: IMessage[] | null;
+  error: boolean | string;
+  selectedChatId: string | null;
 }
 
 export interface IMessage {
