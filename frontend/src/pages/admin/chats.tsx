@@ -17,7 +17,7 @@ import { v4 as uuid } from "uuid";
 export const ChatSection = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const { socket } = useAppSelector((state) => state.socket);
+  const { socket, onlineUsers } = useAppSelector((state) => state.socket);
   const { chats, selectedChatId, messages, selectedUserId } = useAppSelector(
     (state) => state.chat
   );
@@ -110,8 +110,17 @@ export const ChatSection = () => {
           <div className="flex-1 py-2 flex-col h-full px-2 justify-between">
             <h3 className="font-semibold">Mohamed Aflah</h3>
             <div className="text-sm flex gap-1 items-center">
-              <div className="size-[6px] rounded-full bg-green-500"></div>
-              <span>Online</span>
+              {onlineUsers?.some((usr) => usr.id == user?._id) ? (
+                <>
+                  <div className="size-[6px] rounded-full bg-green-500"></div>
+                  <span>Online</span>
+                </>
+              ) : (
+                <>
+                  <div className="size-[6px] rounded-full bg-red-500"></div>
+                  <span>Offline</span>
+                </>
+              )}
             </div>
           </div>
         </div>

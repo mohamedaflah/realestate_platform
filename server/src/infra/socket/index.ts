@@ -47,6 +47,7 @@ export default (server: HttpServer) => {
         onlineUsers.splice(index, 1);
         io.emit("get-online-users", onlineUsers);
       }
+      
     });
     socket.on("send-message", (message) => {
       const useExist = checkUserExistStatus(message.receiverId);
