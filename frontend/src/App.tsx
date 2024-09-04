@@ -16,6 +16,8 @@ import "aos/dist/aos.css";
 import { AdminLayout } from "./layouts/admin.layout";
 import { PropertyList } from "./pages/admin/property-list";
 import { UserList } from "./pages/admin/user-list";
+import { setOnlineUsers, setSocketInstance } from "./redux/reducers/socket.reducer";
+import { io } from "socket.io-client";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -23,6 +25,16 @@ function App() {
     dispatch(getUser());
   }, [dispatch]);
   const { isVerified, user } = useAppSelector((state) => state.user);
+  const { socket } = useAppSelector((state) => state.socket);
+  useEffect(() => {
+    if (user && user?._id && isVerified) {
+      dispatch(setSocketInstance(io("http://localhost:4000")));
+      socket?.emit("join-user", { id: String(user?._id) });
+      socket?.on("get-online-users", (users:{id:string,socketId:string}[]) => {
+        dispatch(setOnlineUsers(users))
+      });
+    }
+  }, [user, dispatch, isVerified, socket]);
   useEffect(() => {
     AOS.init({
       disable: "phone",
@@ -30,6 +42,7 @@ function App() {
       easing: "ease-out-cubic",
     });
   }, []);
+
   return (
     <main>
       <Header />
