@@ -73,7 +73,22 @@ export const getAlluserAction = createAsyncThunk(
   "user/admin/getuser",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get("/getalluser");
+      const { data } = await axiosInstance.get("/user/getalluser");
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleErrors(error));
+    }
+  }
+);
+
+export const updateUserStatusAction = createAsyncThunk(
+  "user/admin/update-user",
+  async (
+    sendPayload: { userId: string; status: boolean },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await axiosInstance.patch("/user/user", sendPayload);
       return data;
     } catch (error) {
       return rejectWithValue(handleErrors(error));

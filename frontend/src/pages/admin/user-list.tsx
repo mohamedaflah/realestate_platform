@@ -4,41 +4,16 @@
 //   </main>;
 // };
 import { cn } from "@/lib/utils";
-import { getAlluserAction } from "@/redux/actions/user.action";
+import {
+  getAlluserAction,
+  updateUserStatusAction,
+} from "@/redux/actions/user.action";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { useEffect } from "react";
 
 const TABLE_HEAD = ["Username", "Phone number", "Joined date", "Actions"];
-
-const TABLE_ROWS = [
-  {
-    name: "John Michael",
-    job: "Manager",
-    date: "23/04/18",
-  },
-  {
-    name: "Alexa Liras",
-    job: "Developer",
-    date: "23/04/18",
-  },
-  {
-    name: "Laurent Perrier",
-    job: "Executive",
-    date: "19/09/17",
-  },
-  {
-    name: "Michael Levi",
-    job: "Developer",
-    date: "24/12/08",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-];
 
 export function UserList() {
   const dispatch = useAppDispatch();
@@ -76,77 +51,90 @@ export function UserList() {
           </tr>
         </thead>
         <tbody>
-          {users?.map(({ username, phoneNumber, status, createdAt,_id }, index) => {
-            const isLast = index === TABLE_ROWS.length - 1;
-            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+          {users?.map(
+            ({ username, phoneNumber, status, createdAt, _id }, index) => {
+              const isLast = index === users?.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
 
-            return (
-              <tr key={String(_id)}>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    {username}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    {phoneNumber}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
-                    {format(createdAt as unknown as string, "PPP")}
-                  </Typography>
-                </td>
-                <td className={classes}>
-                  <Typography
-                    as="a"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                    href="#"
-                    variant="small"
-                    color="blue-gray"
-                    className="font-medium"
-                  >
-                    <div className="w-full h-full  flex gap-2">
-                      <Button
-                        placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                        className={cn("p-2 text-[11px]", {
-                          "bg-red-400": !status,
-                          "bg-green-400": status,
-                        })}
-                      >
-                        {status ? "Block" : "Unblock"}
-                      </Button>
-                    </div>
-                  </Typography>
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={String(_id)}>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {username}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {phoneNumber}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {format(createdAt as unknown as string, "PPP")}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      as="a"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                      href="#"
+                      variant="small"
+                      color="blue-gray"
+                      className="font-medium"
+                    >
+                      <div className="w-full h-full  flex gap-2">
+                        <Button
+                          placeholder={undefined}
+                          onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}
+                          className={cn("p-2 text-[11px]", {
+                            "bg-red-400": !status,
+                            "bg-green-400": status,
+                          })}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            dispatch(
+                              updateUserStatusAction({
+                                userId: String(_id),
+                                status: status ? false : true,
+                              })
+                            );
+                          }}
+                        >
+                          {status ? "Block" : "Unblock"}
+                        </Button>
+                      </div>
+                    </Typography>
+                  </td>
+                </tr>
+              );
+            }
+          )}
         </tbody>
       </table>
     </Card>

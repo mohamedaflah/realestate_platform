@@ -1,9 +1,10 @@
-import { IUserInitial } from "@/types/user.types";
+import { IUser, IUserInitial } from "@/types/user.types";
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getAlluserAction,
   getUser,
   logoutUser,
+  updateUserStatusAction,
   userLogin,
   userSignup,
   validateUser,
@@ -108,7 +109,21 @@ const userReducer = createSlice({
       })
       .addCase(getAlluserAction.rejected, (state, { payload }) => {
         state.loading = false;
-        state.err=String(payload)
+        state.err = String(payload);
+      })
+      .addCase(updateUserStatusAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateUserStatusAction.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.err = false;
+        state.users = state.users?.map((user) => {
+          if (user?._id == payload.userId) {
+            return { ...user, status: payload.userStatus };
+          } else {
+            return user;
+          }
+        }) as IUser[];
       });
   },
 });
