@@ -1,22 +1,52 @@
-import { Socket } from "socket.io";
-import app from "../..";
-const socket = require("socket.io");
-const io: Socket = socket(app, {
-  cors: {
-    origin: [String(process.env.CLIENT_ORIGIN)],
-    credentials: true,
-  },
-});
-const onlineUsers: { socketId: string; id: string }[] = [];
-function checkUserExistStatus(userId: string) {
-  return onlineUsers.some((usr) => userId === usr?.id);
-}
-io.on("connection", (socket: Socket) => {
-  socket.on("join-user", ({ id }) => {
-    const userExist = checkUserExistStatus(id);
-    if (!userExist) {
-      onlineUsers.push({ id, socketId: socket.id });
-    }
-    io.emit("get-online-users", onlineUsers);
+import { Server, Socket } from "socket.io";
+import { Server as HttpServer } from "http";
+
+export default (server: HttpServer) => {
+  const io = new Server(server, {
+    cors: {
+      origin: [String(process.env.CLIENT_ORIGIN)],
+      credentials: true,
+    },
   });
-});
+
+  const onlineUsers: { socketId: string; id: string }[] = [];
+
+  function checkUserExistStatus(userId: string) {
+    if (!userId || userId == "null" || userId == "undefined") {
+      return null;
+    }
+    return onlineUsers.some((usr) => userId === usr?.id);
+  }
+
+  io.on("connection", (socket: Socket) => {
+    socket.on("join-user", ({ id }) => {
+      const userExist = checkUserExistStatus(id);
+      if (!userExist) {
+        onlineUsers.push({ id, socketId: socket.id });
+      }
+      io.emit("get-online-users", onlineUsers);
+      console.log("User connected:", onlineUsers);
+    });
+    socket.on("block-user", ({ id }) => {
+      const userExist = checkUserExistStatus(id);
+      if (userExist) {
+        const user = onlineUsers.find((user) => user.id === id);
+        socket
+          .to(user?.socketId as string)
+          .emit("blocked", { message: "Your access has been denied by admin" });
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("User disconnected:", socket.id);
+      // Remove the disconnected user from onlineUsers
+      const index = onlineUsers.findIndex(
+        (user) => user.socketId === socket.id
+      );
+      if (index !== -1) {
+        onlineUsers.splice(index, 1);
+        io.emit("get-online-users", onlineUsers);
+      }
+    });
+  });
+};

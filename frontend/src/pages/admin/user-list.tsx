@@ -21,6 +21,7 @@ export function UserList() {
     dispatch(getAlluserAction());
   }, [dispatch]);
   const { users } = useAppSelector((state) => state.user);
+  const { socket } = useAppSelector((state) => state.socket);
   return (
     <Card
       className="h-full w-full overflow-scroll"
@@ -117,7 +118,10 @@ export function UserList() {
                             "bg-green-400": status,
                           })}
                           onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
+                            if (!(status ? false : true)) {
+                              socket?.emit("block-user", { id: String(_id) });
+                            }
                             dispatch(
                               updateUserStatusAction({
                                 userId: String(_id),

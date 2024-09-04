@@ -4,7 +4,7 @@ import userModel from "../../models/user.model";
 export const validateUserDetails = async (req: Request, res: Response) => {
   try {
     const { email, phoneNumber } = req.body;
-    console.log(req.body);
+
     
     const emailExist = await userModel.findOne({ email: email });
     if (emailExist) {

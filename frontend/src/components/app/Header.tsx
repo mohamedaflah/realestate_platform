@@ -16,19 +16,24 @@ const Header = () => {
         <div className="flex gap-3">
           {!isVerified ? (
             <>
-              <Button
-                className=""
-                variant={"outline"}
+              <MButton
+                className="bg-transparent border bg-gray-50 text-black"
                 onClick={() => navigate("/login")}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
               >
                 Login
-              </Button>
-              <Button
+              </MButton>
+              <MButton
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
                 className="bg-colors-forground hover:bg-colors-forground"
                 onClick={() => navigate("/signup")}
               >
                 Signup
-              </Button>
+              </MButton>
             </>
           ) : (
             <>

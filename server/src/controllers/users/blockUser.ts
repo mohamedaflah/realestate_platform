@@ -9,17 +9,13 @@ export const updateUserStatus = async (
   try {
     const { userId, status } = req.body;
     await userModel.updateOne({ _id: userId }, { $set: { status: status } });
-    console.log(req.body);
-    
-    return res
-      .status(200)
-      .json({
-        status: true,
-        message: "User updated",
-        userId,
-        userStatus: status,
-      });
 
+    return res.status(200).json({
+      status: true,
+      message: "User updated",
+      userId,
+      userStatus: status,
+    });
   } catch (error) {
     return res
       .status(500)

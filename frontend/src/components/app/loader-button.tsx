@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@material-tailwind/react";
 import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,9 @@ export const LoaderButton = ({
 }: loaderButtonProp) => {
   return (
     <Button
+      placeholder={undefined}
+      onPointerEnterCapture={undefined}
+      onPointerLeaveCapture={undefined}
       {...prop}
       onClick={onClick}
       type={type}

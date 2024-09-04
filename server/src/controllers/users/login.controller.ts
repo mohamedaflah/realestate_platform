@@ -10,7 +10,6 @@ export const loginUserController = async (
 ) => {
   try {
     const { phoneNumber, password } = req.body;
-    console.log(req.body);
 
     const userExist = await userModel.findOne({ phoneNumber: phoneNumber });
     if (!userExist) {

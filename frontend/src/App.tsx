@@ -6,7 +6,7 @@ import { Signup } from "./pages/Signup";
 import { Login } from "./pages/Login";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./redux/store";
-import { getUser } from "./redux/actions/user.action";
+import { getUser, logoutUser } from "./redux/actions/user.action";
 import { AddProperty } from "./pages/addProperty";
 import { PropertyDetail } from "./pages/propertyDetail";
 
@@ -16,9 +16,13 @@ import "aos/dist/aos.css";
 import { AdminLayout } from "./layouts/admin.layout";
 import { PropertyList } from "./pages/admin/property-list";
 import { UserList } from "./pages/admin/user-list";
-import { setOnlineUsers, setSocketInstance } from "./redux/reducers/socket.reducer";
+import {
+  setOnlineUsers,
+  setSocketInstance,
+} from "./redux/reducers/socket.reducer";
 import { io } from "socket.io-client";
 
+import { toast as ShadToast } from "sonner";
 function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -30,11 +34,21 @@ function App() {
     if (user && user?._id && isVerified) {
       dispatch(setSocketInstance(io("http://localhost:4000")));
       socket?.emit("join-user", { id: String(user?._id) });
-      socket?.on("get-online-users", (users:{id:string,socketId:string}[]) => {
-        dispatch(setOnlineUsers(users))
+      socket?.on(
+        "get-online-users",
+        (users: { id: string; socketId: string }[]) => {
+          dispatch(setOnlineUsers(users));
+        }
+      );
+      socket?.on("blocked", () => {
+        ShadToast("Your Access has been denied by admin");
+        dispatch(logoutUser());
       });
+      return () => {
+        socket?.disconnect();
+      };
     }
-  }, [user, dispatch, isVerified, socket]);
+  }, [user, dispatch, isVerified]);
   useEffect(() => {
     AOS.init({
       disable: "phone",
@@ -42,6 +56,12 @@ function App() {
       easing: "ease-out-cubic",
     });
   }, []);
+  useEffect(() => {
+    if (user?._id) {
+      
+      socket?.emit("join-user", { id: String(user?._id) });
+    }
+  }, [user?._id, isVerified, socket]);
 
   return (
     <main>
