@@ -46,6 +46,8 @@ export default (server: HttpServer) => {
       if (index !== -1) {
         onlineUsers.splice(index, 1);
         io.emit("get-online-users", onlineUsers);
+        console.log('_______________________________Msg_____________________EMi');
+        
       }
       
     });
