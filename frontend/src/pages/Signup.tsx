@@ -72,24 +72,24 @@ export const Signup = () => {
   ) => {
     try {
       setLocalLoad(true);
-      dispatch(
-        validateUser({
-          email: values.email ? values.email : "",
-          phoneNumber: values.phoneNumber,
-        })
-      ).then(async (res) => {
-        if (res.type.endsWith("fulfilled")) {
-          const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
-          const confirmationresult = await signInWithPhoneNumber(
-            auth,
-            getValues("phoneNumber"),
-            recaptcha
-          );
+        dispatch(
+          validateUser({
+            email: values.email ? values.email : "",
+            phoneNumber: values.phoneNumber,
+          })
+        ).then(async (res) => {
+          if (res.type.endsWith("fulfilled")) {
+            const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+            const confirmationresult = await signInWithPhoneNumber(
+              auth,
+              getValues("phoneNumber"),
+              recaptcha
+            );
 
-          dispatch(setConfirmationResult(confirmationresult));
-          dispatch(setUserLocally(values));
-        }
-      });
+            dispatch(setConfirmationResult(confirmationresult));
+            dispatch(setUserLocally(values));
+          }
+        });
     } catch (error) {
       console.log(`firebase err ${error}`);
     } finally {
