@@ -1,10 +1,10 @@
 # Instruction to setup this project
 ## _______________________________
 
-1. git clone https://github.com/mohamedaflah/realestate_platform.git
+1. git clone https://github.com/NasscriptSoftware/real-estate-management.git
 2. cd client
    -> npm install
-   -> setup .env based .env.local
+   -> setup .env based on .env-sample
    -> npm run dev
 3. open new Terminal without closing existing terminal
 4. cd server
