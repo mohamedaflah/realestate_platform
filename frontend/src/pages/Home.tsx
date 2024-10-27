@@ -1,5 +1,4 @@
 
-import Particles from "@/components/app/particle-bg";
 import { Button } from "@/components/ui/button";
 import { getAllProperties } from "@/redux/actions/propertyAction";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -50,9 +49,10 @@ const Home = () => {
         <div className="w-full mt-10 flex justify-between items-center">
           <img src={"/images/jre-logo.svg"} className="h-24" alt="" />
           <div className="flex gap-5 items-center">
-            <span className="uppercase font-bold text-white cursor-pointer">Our services</span>
+            {/* <span className="uppercase font-bold text-white cursor-pointer">Our services</span>
             <span className="uppercase font-bold text-white cursor-pointer">Sell properties</span>
-            <span className="uppercase font-bold text-white cursor-pointer">Contact us</span>
+            <span className="uppercase font-bold text-white cursor-pointer">Contact us</span> */}
+            {/* {user&&!isVerified&&} */}
             <span className="uppercase font-bold text-white cursor-pointer"  onClick={() => navigate("/login")}>Login</span>
             <span className="uppercase font-bold text-white cursor-pointer" onClick={() => navigate("/signup")}>Signup</span>
           </div>

@@ -4,7 +4,7 @@ import propertyModel from "../../models/property.model";
 
 export const getAllProperties = async (req: Request, res: Response) => {
   try {
-    const { userId, search, sellTypes } = req.query;
+    const { userId, search } = req.query;
     console.log(userId, " =>");
     console.log(req.query);
 
@@ -18,7 +18,6 @@ export const getAllProperties = async (req: Request, res: Response) => {
     // }
 
     const properties = await propertyModel.find(query);
-    
 
     return res
       .status(200)
